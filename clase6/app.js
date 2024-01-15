@@ -14,7 +14,32 @@ const port = 8080;
 
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+
 //Endpoint
+app.get("/api", (req,res) => res.json({
+    Mensaje: "Metodo GET"
+}));
+
+app.post("/api", (req, res) => {
+    res.json({
+        Mensaje: "Metodo POST"
+    })
+})
+
+app.put("/api", (req, res) => {
+    res.json({
+        Mensaje: "Metodo PUT"
+    })
+})
+
+app.delete("/api", (req, res) => {
+    res.json({
+        Mensaje: "Metodo DELETE"
+    })
+})
+
 app.get("/inicio", (req, res) => res.send("Pagina de inicio de mi servidor"));
 app.get("/", (req, res) => res.send("Pagina default de mi servidor"));
 app.get("/bienvenida", (req, res) => {
@@ -64,6 +89,80 @@ app.get("/listausuarios/:userid", (req, res) => {
     }
 
 })
+
+
+
+app.post("/api/usuario", (req, res) => {
+
+    let usuario = req.body;
+
+    if (!usuario.nombre || !usuario.apellido) {
+        return res.status(400).send({
+            status: "ERROR",
+            error: "Faltan campos"
+        })
+    }
+
+    usuarios.push(usuario);
+
+    res.send({
+        status: "success",
+        message: "Usuario creado"
+    })
+
+})
+
+app.delete("/api/usuario/:idUsuario", (req, res) => {
+    let idUsuario;
+
+    if (idUsuario = parseInt(req.params.idUsuario)) {
+        usuarios = usuarios.filter(usuario => usuario.id !== idUsuario);
+        res.send({
+            status: "success",
+            message: "Usuario eliminado"    
+        })
+    }
+    else {
+        res.status(404).send({
+            status : "ERROR",
+            error: "idUsuario inválido"
+        })
+    }
+})
+
+const frase = "Comision 50035 de CoderHouse";
+
+app.get("/api/frase", (req, res) => {
+    res.json({frase});
+})
+
+app.get("/api/palabras/:pos", (req, res) => {
+    let pos;
+
+    if (pos = parseInt(req.params.pos)) {
+        const palabras = frase.split(" ");
+        if (pos < 0 || pos > palabras.length) {
+            res.status(404).json({
+                status : "ERROR",
+                error: "pos fuera de rango"
+            })     
+        }
+        else {
+            const palabraElegida = palabras[pos -1];
+            res.json({
+                palabra : palabraElegida
+            })
+        }
+        
+    }
+    else {
+        res.status(404).json({
+            status : "ERROR",
+            error: "pos inválida"
+        })    
+    }
+})
+
 
 /* app.get("/products", (req, res) => {
     let limite = parseInt(req.query.limite);
