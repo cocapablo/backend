@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pets & Users</title>
+</head>
+<body>
+    <h2>Formulario mascotas</h2>    
+
+    <form action="/api/pets" method="post">
+        <label for="nombreMascota">Nombre de la mascota</label>
+        <input type="text" id="nombreMascota" name="nombre">
+        <br/>
+        <label for="razaMascota">Raza de la mascota</label>
+        <input type="text" id="razaMascota" name="raza">
+        <br/>
+        <label for="edadMascota">Edad de la mascota</label>
+        <input type="number" id="edadMascota" name="edad">
+        <br/>
+        <button type="submit">Agregar Mascota</button>
+    </form>
+
+    <h2>Formulario Usuarios</h2>
+    <form action="/api/users" method="post">
+        <label for="nombreUsuario">Nombre del usuario</label>
+        <input type="text" id="nombreUsuario" name="nombre">
+        <br/>
+        <label for="apellidoUsuario">Apellido del usuario</label>
+        <input type="text" id="apellidoUsuario" name="apellido">
+        <br/>
+        <label for="edadUsuario">Edad del usuario</label>
+        <input type="number" id="edadUsuario" name="edad">
+        <br/>
+        <button type="submit">Agregar Usuario</button>
+    </form>
+</body>
+</html>
