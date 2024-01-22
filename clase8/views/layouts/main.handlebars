@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Nombre: {{user.nombre}}</h2>
+    <h2>Apellido: {{user.apellido}}</h2>
+    <h2>Edad: {{user.edad}}</h2>
+    <h2>Correo: {{user.correo}}</h2>
+    <h2>Telefono: {{user.telefono}}</h2>
+
+    {{#if isAdmin}}
+        {{#each comidas}}
+
+            <div>
+                <p>{{this.nombre}}</p>
+                <p>{{this.precio}}</p>
+            </div>
+
+        {{/each}}
+
+    {{else}}
+
+    <p>No eres Admin</p>
+
+    {{/if}}
+
+</body>
+</html>
