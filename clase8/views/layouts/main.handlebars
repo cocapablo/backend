@@ -28,5 +28,22 @@
 
     {{/if}}
 
+    <div>
+        <p>Todo listo para trabajar con websockets</p>
+        <label for="idMensaje">Ingrese un texto</label>
+        <input type="text" name="mensaje" id="idMensaje"></input>
+        <input type="button" value="Enviar Mensaje" id="btnEnviar"></input>
+    </div>
+
+    <div id="idMensajes">
+        
+    </div>
+
+    <div id="divRespuesta">
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
 </body>
 </html>
