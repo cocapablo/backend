@@ -30,7 +30,10 @@ console.log("Dirname: ", __dirname);
 
 const httpServer= app.listen(port, () => console.log("Conectado al server en port " + port + " con Express"));
 
-mongoose.connect("mongodb+srv://cocapablo:FKITs3H3kYgRNPSy@cluster0.u0b3vak.mongodb.net/coderDB?retryWrites=true&w=majority")
+//La cedena de conexion habría que leerla de un archivo por seguridad
+const cadenaConexionBD = ""; //reemplazar esto con el valor de la cadena de conexion a la BD
+
+mongoose.connect(cadenaConexionBD)
 .then(() => {
     console.log("Conectado a la base de datos");
 })
