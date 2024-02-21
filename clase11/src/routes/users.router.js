@@ -5,7 +5,7 @@ import userModel from "../models/users.model.js";
 
 const router = Router();
 
-router.get("/", async (rqe, res) => {
+router.get("/api/users", async (req, res) => {
     try {
         let users = await userModel.find();
         res.send({result: "success", payload: users});
@@ -15,21 +15,21 @@ router.get("/", async (rqe, res) => {
     }
 })
 
-router.post("/", async (req, res) => {
-    let {nombre, apellido, email} = req.body;
+router.post("/api/users", async (req, res) => {
+    let {first_name, last_name, email, gender} = req.body;
 
-    if (!nombre || !apellido || !email) {
+    if (!first_name || !last_name || !email || !gender) {
         res.send({status: "error", error: "Faltan datos"})
     }
 
-    let result = await userModel.create({nombre, apellido, email});
+    let result = await userModel.create({first_name, last_name, email, gender});
     res.send({result: "success", payload: result});
 })
 
-router.put("/:uid", async (req, res) => {
+router.put("/api/users/:uid", async (req, res) => {
     let {uid} = req.params;
     let userToReplace = req.body;
-    if (!userToReplace.nombre || !userToReplace.apellido || !userToReplace.email) {
+    if (!userToReplace.first_name || !userToReplace.last_name || !userToReplace.email || !userToReplace.gender) {
         res.send({status: "error", error: "Faltan datos"});    
     }
 
@@ -39,13 +39,9 @@ router.put("/:uid", async (req, res) => {
 })
 
 
-router.delete("/:uid", async (req, res) => {
+router.delete("/api/users/:uid", async (req, res) => {
     let {uid} = req.params;
-    let userToReplace = req.body;
-    if (!userToReplace.nombre || !userToReplace.apellido || !userToReplace.email) {
-        res.send({status: "error", error: "Faltan datos"});    
-    }
-
+    
     let result = await userModel.deleteOne({_id: uid});
 
     res.send({result: "success", payload: result});
