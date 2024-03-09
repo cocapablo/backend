@@ -5,7 +5,6 @@ const userCollection = "users";
 const userSchema = new mongoose.Schema({
     first_name: {
         type: String, 
-        index: true,
         required: true,
         max: 100
     },
@@ -17,9 +16,19 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String, 
         required: true,
+        index: true,
         max: 50
     },
-    gender: {
+    age: {
+        type: Number,
+        required: true,
+    },
+    password: {
+        type: String, 
+        required: true,
+        max: 10
+    },
+    role: {
         type: String,
         required: true,
         max: 10

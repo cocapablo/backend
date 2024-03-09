@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const studentCollection = "students";
 
 const studentSchema = new mongoose.Schema({
@@ -31,6 +32,7 @@ const studentSchema = new mongoose.Schema({
     }
 
 })
+
 
 const studentModel = mongoose.model(studentCollection, studentSchema);
 
