@@ -2,6 +2,8 @@ import { access, readFile } from "fs/promises";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
+import jwt from "jsonwebtoken";
+
 function getDirectorioAnterior(sDirectorio) {
     let directorios = sDirectorio.split("\\");
 
@@ -280,6 +282,40 @@ export const isValidPassword = (user, password) => {
     isValid = bcrypt.compareSync(password, user.password);
 
     return isValid;
+}
+
+
+//jsonwebtoken
+
+const PRIVATE_KEY = "ClavePrivadaDePabloCoca";
+
+export const generateToken = (user) => {
+    const token = jwt.sign(user, PRIVATE_KEY, {expiresIn: "24h"});
+    return token;
+}
+
+export const authToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) return res.status(401).send("ERROR: Usuario No autenticado");
+
+    const token = authHeader.split(" ")[1]; //Se hace el split para retirar la palabra Bearer y te quedás con el resto
+
+    console.log("Token recibido", token);
+
+    jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
+        if (error) return res.status(403).send("ERROR: Usuario No Autorizado");
+
+        console.log("Credentials: ", credentials);
+
+        req.user = {
+            name: credentials.name,
+            email: credentials.email,
+            password: credentials.password //Después sacar el password por ser info sensible
+        }
+
+        next();
+    })
 }
 
 

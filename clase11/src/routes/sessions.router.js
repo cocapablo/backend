@@ -1,5 +1,5 @@
 import express from "express";
-import { userManager } from "../clase20.js";
+import { userManager } from "../clase21.js";
 import passport from "passport";
 
 const router = express.Router();
@@ -170,5 +170,21 @@ router.get("/api/sessions/logout", (req, res) => {
         }
     })
 })
+
+//GitHub
+router.get("/api/sessions/github", passport.authenticate("github", {scope: ["user.email"]}), async (req, res) => {});
+
+router.get("/api/sessions/githubcallback", passport.authenticate("github", {failureRedirect: "/api/sessions/failgithub"}), async (req, res) => {
+    req.session.user = req.user;
+    res.redirect("/");
+})
+
+router.get("/api/sessions/failgithub", (req, res) => {
+    let mensajeError = "Error al Loguearse en GitHub";
+
+    req.session.error && (mensajeError = req.session.error);
+    res.redirect("/login?error=true&mensajeError=" + mensajeError);   
+})
+
 
 export default router;
