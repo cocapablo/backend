@@ -76,5 +76,17 @@ router.get("/changePassword", usuarioNoLogueado, (req, res) => {
     res.render("changePassword", {error, mensajeError});
 })
 
+//JWT
+router.get("/loginJWT", (req, res) => {
+    let error = false;
+    let mensajeError = "";
+
+    req.query && req.query.error && (error = (req.query.error === "true" ? true : false));
+    console.log("Error: ", error);
+    req.query && req.query.mensajeError && (mensajeError = req.query.mensajeError);
+    console.log("Mensaje Error: ", mensajeError);
+
+    res.render("loginJWT", {error, mensajeError});
+})
 
 export default router;

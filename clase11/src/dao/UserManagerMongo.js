@@ -38,6 +38,23 @@ class UserManager {
                 throw new Error("ERROR: role vacío");
             }
 
+            //Me fijo si el usuario ya existía en la Base de Datos
+            let viejoUsuario = null;
+            try {
+                viejoUsuario = await this.getUserAsync(email); 
+            }
+            catch (error) {
+                //Si el Usuario no existía lanza el error así que lo capturo y sigo
+                console.log("Estamos bien. el Usuario no existía en la Base de Datos")
+            }
+
+            if (viejoUsuario) {
+                //El Usuario ya existía en la Base De datos
+                throw new Error("El Usuario de mail " + email + " ya existe en la Base de Datos");
+            }
+
+
+
             //Agrego el usuario a la Base de Datos
             let passwordEncriptada = this.#createHash(password);
 

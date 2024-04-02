@@ -22,7 +22,7 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 
 //JWT
-import jwtRouter from "./routes/jwt.routes.js";
+import jwtRouter from "./routes/jwt.router.js";
 
 import { cargarDatosenBDdesdeArchivo, getEstadisticas, agregarDocumentoAModelo, agregarCursoAEstudiante, getStudentFull, getStudentsDeMejorAPeor, getStudentsPorGrupo, getPromedioStudentsDeGrupo, getPromedioStudentsDeGenero, getStudentsAprobadosyReprobados } from "./utils.js";
 
@@ -76,6 +76,10 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session); */
+
+//Archivos estáticos
+app.use(express.static(path.join(__dirname, "public")));
+console.log("Dirname: ", __dirname);
 
 //Configuracion para handlebars
 app.engine("handlebars", handlebars.engine());

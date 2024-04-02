@@ -1,7 +1,8 @@
 import { access, readFile } from "fs/promises";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-
+import cookieParser from "cookie-parser";
+import passport from "passport";
 import jwt from "jsonwebtoken";
 
 function getDirectorioAnterior(sDirectorio) {
@@ -287,7 +288,9 @@ export const isValidPassword = (user, password) => {
 
 //jsonwebtoken
 
-const PRIVATE_KEY = "ClavePrivadaDePabloCoca";
+export const PRIVATE_KEY = "ClavePrivadaDePabloCoca";
+
+export const COOKIE_TOKEN_NAME = "cookieToken";
 
 export const generateToken = (user) => {
     const token = jwt.sign(user, PRIVATE_KEY, {expiresIn: "24h"});
@@ -297,25 +300,87 @@ export const generateToken = (user) => {
 export const authToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader) return res.status(401).send("ERROR: Usuario No autenticado");
+    if (!authHeader) return res.status(401).send({status: "error", error : "Usuario No Autenticado"});
 
     const token = authHeader.split(" ")[1]; //Se hace el split para retirar la palabra Bearer y te quedás con el resto
 
     console.log("Token recibido", token);
 
     jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
-        if (error) return res.status(403).send("ERROR: Usuario No Autorizado");
+        if (error) return res.status(403).send({status: "error", error : "Usuario No Autorizado"});
 
         console.log("Credentials: ", credentials);
 
         req.user = {
             name: credentials.name,
             email: credentials.email,
-            password: credentials.password //Después sacar el password por ser info sensible
+            password: credentials.password, //Después sacar el password por ser info sensible
+            role: credentials.role
         }
 
         next();
     })
+}
+
+export const authTokenCookie = (req, res, next) => {
+    //Obtengo el token de una cookie
+    let token = null;
+
+    token = cookieExtractor(req);
+
+    if (!token) return res.status(401).send({status: "error", error : "Usuario No Autenticado"});
+
+    console.log("Token recibido", token);
+
+    jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
+        if (error) return res.status(403).send({status: "error", error : "Usuario No Autorizado"});
+
+        console.log("Credentials: ", credentials);
+
+        req.user = {
+            name: credentials.name,
+            email: credentials.email,
+            password: credentials.password, //Después sacar el password por ser info sensible
+            role: credentials.role
+        }
+
+        next();
+    })
+}
+
+export const cookieExtractor = (req) => {
+    //Obtengo el token de una cookie
+    let token = null;
+
+    req && req.cookies && (token = req.cookies[COOKIE_TOKEN_NAME]);
+
+    return token;
+}
+
+export const passportCall = (strategy) => {
+    return async (req, res, next) => {
+        passport.authenticate(strategy, function(err, user, info) {
+            if (err) return next(err);
+
+            if (!user) {
+                return res.status(401).send({status: "error", error: info.messages ? info.messages : info.toString()});
+            }
+
+            req.user = user;
+
+            next();
+        }) (req, res, next)
+    }
+}
+
+export const authorization = (role) => {
+    return (req, res, next) => {
+        if (!req.user) return res.status(401).send({status: "error", error: "Usuario no logueado"});
+
+        if (req.user.role != role) return res.status(403).send({status: "error", error: "Usuario no autorizado"})
+
+        next();
+    }
 }
 
 

@@ -21,7 +21,8 @@ const router = express.Router();
         res.redirect("/login");
     }
     catch (error) {
-        res.status(500).send("Error de registro");
+        //res.status(500).send("Error de registro");
+        res.redirect("/register?error=true&mensajeError=" + error.message);
     }
 }) */
 

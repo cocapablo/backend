@@ -1,12 +1,31 @@
 import passport from "passport";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
+import jwt from "passport-jwt";
 import { userManager } from "../clase21.js";
+import { cookieExtractor,  PRIVATE_KEY} from "../utils.js";
 
 
 const LocalStrategy = local.Strategy;
+const JWTStrategy = jwt.Strategy;
+const ExtractJWT = jwt.ExtractJwt;
 
 const initializePassport = () => {
+    passport.use("jwt", new JWTStrategy(
+        {
+            jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+            secretOrKey: PRIVATE_KEY
+        },
+        async (jwtPayload, done) => {
+            try {
+                return done(null, jwtPayload);
+            }
+            catch(err) {
+                return done(err);
+            }
+        }
+    ));
+
 
     passport.use("github", new GitHubStrategy(
         {
@@ -26,11 +45,11 @@ const initializePassport = () => {
                     viejoUsuario = await userManager.getUserAsync(profile._json.email);
 
                     //El Usuario ya existía: no se puedo volver a registrar
-                    console.log("El Usuario ya existía previemente");
+                    console.log("El Usuario ya existía previamente");
 
-                    req.session.error = "El Usuario ya existía previemente";
+                    req.session.error = "El Usuario ya existía previamente";
 
-                    return done(null, false, "El Usuario ya existía previemente"); //Esto significa que no hubo error pero no hay usuario para devolver
+                    return done(null, false, "El Usuario ya existía previamente"); //Esto significa que no hubo error pero no hay usuario para devolver
                 }
                 catch (error) {
                     //El Usuario no existía
