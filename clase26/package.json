@@ -1,0 +1,18 @@
+{
+  "name": "clase26",
+  "version": "1.0.0",
+  "description": "Aplicación que nos enseña el manejo básico de MVC",
+  "main": "src/app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/app.js",
+    "watch": "node --watch src/app.js"
+  },
+  "author": "Pablo Coca",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
